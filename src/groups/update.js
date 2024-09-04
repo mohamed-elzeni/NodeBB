@@ -24,23 +24,7 @@ module.exports = function (Groups) {
 
 		const payload = createPayload(values);
 
-		if (values.hasOwnProperty('name')) {
-			await checkNameChange(groupName, values.name);
-		}
-
-		if (values.hasOwnProperty('private')) {
-			await updatePrivacy(groupName, values.private);
-		}
-
-		if (values.hasOwnProperty('hidden')) {
-			await updateVisibility(groupName, values.hidden);
-		}
-
-		if (values.hasOwnProperty('memberPostCids')) {
-			const validCids = await categories.getCidsByPrivilege('categories:cid', groupName, 'topics:read');
-			const cidsArray = values.memberPostCids.split(',').map(cid => parseInt(cid.trim(), 10)).filter(Boolean);
-			payload.memberPostCids = cidsArray.filter(cid => validCids.includes(cid)).join(',') || '';
-		}
+		await handleSpecialProperties(groupName, values, payload);
 
 		await db.setObject(`group:${groupName}`, payload);
 		await Groups.renameGroup(groupName, values.name);
@@ -108,6 +92,26 @@ module.exports = function (Groups) {
 		}
 
 		return payload;
+	}
+
+	async function handleSpecialProperties(groupName, values, payload) {
+		if (values.hasOwnProperty('name')) {
+			await checkNameChange(groupName, values.name);
+		}
+
+		if (values.hasOwnProperty('private')) {
+			await updatePrivacy(groupName, values.private);
+		}
+
+		if (values.hasOwnProperty('hidden')) {
+			await updateVisibility(groupName, values.hidden);
+		}
+
+		if (values.hasOwnProperty('memberPostCids')) {
+			const validCids = await categories.getCidsByPrivilege('categories:cid', groupName, 'topics:read');
+			const cidsArray = values.memberPostCids.split(',').map(cid => parseInt(cid.trim(), 10)).filter(Boolean);
+			payload.memberPostCids = cidsArray.filter(cid => validCids.includes(cid)).join(',') || '';
+		}
 	}
 
 	async function updateVisibility(groupName, hidden) {
