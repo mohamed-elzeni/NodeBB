@@ -22,7 +22,36 @@ module.exports = function (Groups) {
 		// 'true' and '1' = true, everything else false
 		values = castBooleanValues(values);
 
-		const payload = createPayload(values);
+		const payload = {
+			description: values.description || '',
+			icon: values.icon || '',
+			labelColor: values.labelColor || '#000000',
+			textColor: values.textColor || '#ffffff',
+		};
+
+		if (values.hasOwnProperty('userTitle')) {
+			payload.userTitle = values.userTitle || '';
+		}
+
+		if (values.hasOwnProperty('userTitleEnabled')) {
+			payload.userTitleEnabled = values.userTitleEnabled ? '1' : '0';
+		}
+
+		if (values.hasOwnProperty('hidden')) {
+			payload.hidden = values.hidden ? '1' : '0';
+		}
+
+		if (values.hasOwnProperty('private')) {
+			payload.private = values.private ? '1' : '0';
+		}
+
+		if (values.hasOwnProperty('disableJoinRequests')) {
+			payload.disableJoinRequests = values.disableJoinRequests ? '1' : '0';
+		}
+
+		if (values.hasOwnProperty('disableLeave')) {
+			payload.disableLeave = values.disableLeave ? '1' : '0';
+		}
 
 		if (values.hasOwnProperty('name')) {
 			await checkNameChange(groupName, values.name);
