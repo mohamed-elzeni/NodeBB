@@ -16,6 +16,7 @@ module.exports = function (Groups) {
 	Groups.update = async function (groupName, values) {
 		await validateGroupExists(groupName);
 
+		console.log('MOHAMED ELZENI');
 		values = await applyPluginFilters(groupName, values);
 
 		// Cast some values as bool (if not boolean already)
