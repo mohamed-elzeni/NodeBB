@@ -67,32 +67,27 @@ module.exports = function (Groups) {
 			textColor: values.textColor || '#ffffff',
 		};
 
+		const booleanFields = [
+			'userTitleEnabled',
+			'hidden',
+			'private',
+			'disableJoinRequests',
+			'disableLeave',
+		];
+
+		booleanFields.forEach((field) => {
+			if (values.hasOwnProperty(field)) {
+				payload[field] = values[field] ? '1' : '0';
+			}
+		});
+
 		if (values.hasOwnProperty('userTitle')) {
 			payload.userTitle = values.userTitle || '';
 		}
 
-		if (values.hasOwnProperty('userTitleEnabled')) {
-			payload.userTitleEnabled = values.userTitleEnabled ? '1' : '0';
-		}
-
-		if (values.hasOwnProperty('hidden')) {
-			payload.hidden = values.hidden ? '1' : '0';
-		}
-
-		if (values.hasOwnProperty('private')) {
-			payload.private = values.private ? '1' : '0';
-		}
-
-		if (values.hasOwnProperty('disableJoinRequests')) {
-			payload.disableJoinRequests = values.disableJoinRequests ? '1' : '0';
-		}
-
-		if (values.hasOwnProperty('disableLeave')) {
-			payload.disableLeave = values.disableLeave ? '1' : '0';
-		}
-
 		return payload;
 	}
+
 
 	async function handleSpecialProperties(groupName, values, payload) {
 		if (values.hasOwnProperty('name')) {
